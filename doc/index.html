@@ -1,0 +1,2045 @@
+```html
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>REPÈRE ÉCOLE — Pilotage</title>
+
+  <style>
+    :root {
+      --green: #137a63;
+      --green-dark: #0d6653;
+      --green-light: #e9f5f1;
+
+      --bg: #f6f7f6;
+      --surface: #ffffff;
+      --surface-soft: #fafbfa;
+
+      --text: #1f2926;
+      --muted: #7a8581;
+      --border: #e5e9e7;
+
+      --red: #d95b57;
+      --red-bg: #fbeeed;
+
+      --orange: #d89235;
+      --orange-bg: #fff5e6;
+
+      --blue: #4e7bb8;
+      --blue-bg: #edf3fb;
+
+      --green-status: #3d9b79;
+      --green-status-bg: #eaf6f1;
+
+      --radius: 14px;
+      --shadow: 0 2px 10px rgba(20, 40, 34, 0.04);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    /* =========================================================
+       APP LAYOUT
+    ========================================================= */
+
+    .app {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* =========================================================
+       SIDEBAR
+    ========================================================= */
+
+    .sidebar {
+      width: 244px;
+      background: #ffffff;
+      border-right: 1px solid var(--border);
+      padding: 22px 14px;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 10px 25px;
+    }
+
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      background: var(--green);
+      color: white;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 15px;
+    }
+
+    .brand-name {
+      font-size: 17px;
+      font-weight: 750;
+      letter-spacing: -0.3px;
+    }
+
+    .brand-name span {
+      color: var(--green);
+    }
+
+    .school-selector {
+      margin: 0 8px 22px;
+      padding: 10px 11px;
+      background: var(--bg);
+      border-radius: 10px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .school-selector strong {
+      display: block;
+      color: var(--text);
+      font-size: 13px;
+      margin-bottom: 2px;
+    }
+
+    .nav-section {
+      margin-bottom: 22px;
+    }
+
+    .nav-label {
+      padding: 0 12px 8px;
+      color: #a0aaa6;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+    }
+
+    .nav {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 10px 12px;
+      border-radius: 9px;
+      color: #65706c;
+      font-size: 13px;
+      text-decoration: none;
+      transition: 0.15s;
+    }
+
+    .nav-item:hover {
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .nav-item.active {
+      color: var(--green);
+      background: var(--green-light);
+      font-weight: 650;
+    }
+
+    .nav-icon {
+      width: 18px;
+      text-align: center;
+      font-size: 15px;
+    }
+
+    .sidebar-bottom {
+      margin-top: auto;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+    }
+
+    .user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+    }
+
+    .avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #dcebe6;
+      color: var(--green);
+      display: grid;
+      place-items: center;
+      font-size: 12px;
+      font-weight: 750;
+    }
+
+    .user-info strong {
+      display: block;
+      font-size: 12px;
+    }
+
+    .user-info span {
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    /* =========================================================
+       MAIN
+    ========================================================= */
+
+    .main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    /* =========================================================
+       HEADER
+    ========================================================= */
+
+    .header {
+      min-height: 116px;
+      background: var(--green);
+      color: white;
+      padding: 22px 34px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header-left {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .date {
+      font-size: 12px;
+      opacity: 0.78;
+    }
+
+    .greeting {
+      font-size: 25px;
+      line-height: 1.15;
+      font-weight: 720;
+      letter-spacing: -0.5px;
+    }
+
+    .quote {
+      font-size: 11px;
+      opacity: 0.75;
+      margin-top: 4px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .school-name {
+      text-align: right;
+      font-size: 11px;
+      opacity: 0.8;
+    }
+
+    .school-name strong {
+      display: block;
+      color: white;
+      font-size: 13px;
+      opacity: 1;
+      margin-bottom: 2px;
+    }
+
+    .new-button {
+      border: 0;
+      background: white;
+      color: var(--green);
+      padding: 10px 15px;
+      border-radius: 9px;
+      font-size: 12px;
+      font-weight: 700;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    }
+
+    .new-button:hover {
+      transform: translateY(-1px);
+    }
+
+    /* =========================================================
+       CONTENT
+    ========================================================= */
+
+    .content {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 26px 34px 40px;
+    }
+
+    /* =========================================================
+       KPI
+    ========================================================= */
+
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .kpi {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 17px 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .kpi-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .kpi-label {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .kpi-icon {
+      font-size: 14px;
+    }
+
+    .kpi-value {
+      font-size: 27px;
+      line-height: 1;
+      font-weight: 750;
+      margin: 10px 0 5px;
+      letter-spacing: -1px;
+    }
+
+    .kpi-info {
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    .kpi.urgent .kpi-value {
+      color: var(--red);
+    }
+
+    .kpi.late .kpi-value {
+      color: var(--orange);
+    }
+
+    .kpi.today .kpi-value {
+      color: var(--green);
+    }
+
+    /* =========================================================
+       SECTION HEADERS
+    ========================================================= */
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 24px 0 12px;
+    }
+
+    .section-title {
+      font-size: 15px;
+      font-weight: 720;
+      letter-spacing: -0.2px;
+    }
+
+    .section-link {
+      font-size: 11px;
+      color: var(--green);
+      text-decoration: none;
+      font-weight: 650;
+    }
+
+    /* =========================================================
+       PINNED
+    ========================================================= */
+
+    .pinned {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .pinned-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: var(--shadow);
+    }
+
+    .pin-icon {
+      width: 32px;
+      height: 32px;
+      background: var(--orange-bg);
+      color: var(--orange);
+      border-radius: 9px;
+      display: grid;
+      place-items: center;
+      font-size: 13px;
+    }
+
+    .pinned-text {
+      min-width: 0;
+    }
+
+    .pinned-text strong {
+      display: block;
+      font-size: 12px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .pinned-text span {
+      display: block;
+      color: var(--muted);
+      font-size: 10px;
+      margin-top: 3px;
+    }
+
+    /* =========================================================
+       THREE COLUMNS
+    ========================================================= */
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 1fr 1fr;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel-header {
+      padding: 15px 17px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .panel-header h3 {
+      margin: 0;
+      font-size: 13px;
+      font-weight: 720;
+    }
+
+    .panel-header span {
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    .panel-body {
+      padding: 5px 0;
+    }
+
+    /* =========================================================
+       LIST ITEMS
+    ========================================================= */
+
+    .list-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 11px;
+      padding: 13px 17px;
+      border-bottom: 1px solid #eef1ef;
+    }
+
+    .list-item:last-child {
+      border-bottom: 0;
+    }
+
+    .item-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      font-size: 12px;
+    }
+
+    .item-icon.red {
+      background: var(--red-bg);
+      color: var(--red);
+    }
+
+    .item-icon.orange {
+      background: var(--orange-bg);
+      color: var(--orange);
+    }
+
+    .item-icon.green {
+      background: var(--green-status-bg);
+      color: var(--green-status);
+    }
+
+    .item-icon.blue {
+      background: var(--blue-bg);
+      color: var(--blue);
+    }
+
+    .item-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .item-content strong {
+      display: block;
+      font-size: 11.5px;
+      line-height: 1.35;
+    }
+
+    .item-content span {
+      display: block;
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.4;
+      margin-top: 3px;
+    }
+
+    .item-time {
+      color: var(--muted);
+      font-size: 9px;
+      white-space: nowrap;
+    }
+
+    /* =========================================================
+       STATUS BADGES
+    ========================================================= */
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      border-radius: 99px;
+      padding: 4px 7px;
+      font-size: 9px;
+      font-weight: 650;
+    }
+
+    .badge.green {
+      background: var(--green-status-bg);
+      color: var(--green-status);
+    }
+
+    .badge.orange {
+      background: var(--orange-bg);
+      color: var(--orange);
+    }
+
+    .badge.red {
+      background: var(--red-bg);
+      color: var(--red);
+    }
+
+    /* =========================================================
+       BOTTOM WIDGETS
+    ========================================================= */
+
+    .widgets {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .widget {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 17px;
+      box-shadow: var(--shadow);
+    }
+
+    .widget-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .widget-title strong {
+      font-size: 12px;
+    }
+
+    .widget-title span {
+      font-size: 10px;
+      color: var(--green);
+    }
+
+    /* =========================================================
+       TEAM
+    ========================================================= */
+
+    .team-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .person {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .person-avatar {
+      width: 29px;
+      height: 29px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: #edf0ef;
+      color: #66716d;
+      font-size: 9px;
+      font-weight: 700;
+    }
+
+    .person-info strong {
+      display: block;
+      font-size: 10px;
+    }
+
+    .person-info span {
+      font-size: 9px;
+      color: var(--muted);
+    }
+
+    .online {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green-status);
+    }
+
+    /* =========================================================
+       ATTENDANCE
+    ========================================================= */
+
+    .attendance-number {
+      font-size: 28px;
+      font-weight: 760;
+      color: var(--green);
+      letter-spacing: -1px;
+    }
+
+    .attendance-label {
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    .progress {
+      height: 7px;
+      background: #edf0ef;
+      border-radius: 99px;
+      overflow: hidden;
+      margin-top: 13px;
+    }
+
+    .progress-bar {
+      width: 94%;
+      height: 100%;
+      background: var(--green-status);
+      border-radius: inherit;
+    }
+
+    .attendance-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 9px;
+      color: var(--muted);
+      margin-top: 7px;
+    }
+
+    /* =========================================================
+       STUDENT FOLLOW-UP
+    ========================================================= */
+
+    .followup-stat {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .circle {
+      width: 66px;
+      height: 66px;
+      border-radius: 50%;
+      border: 7px solid #e6f2ee;
+      display: grid;
+      place-items: center;
+      color: var(--green);
+      font-weight: 750;
+      font-size: 14px;
+    }
+
+    .followup-details div {
+      margin-bottom: 6px;
+    }
+
+    .followup-details strong {
+      font-size: 12px;
+    }
+
+    .followup-details span {
+      color: var(--muted);
+      font-size: 9px;
+      margin-left: 4px;
+    }
+
+    /* =========================================================
+       MODAL
+    ========================================================= */
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.4);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+      width: 90%;
+      max-width: 500px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 720;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 24px;
+      color: var(--muted);
+      cursor: pointer;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-close:hover {
+      color: var(--text);
+    }
+
+    .modal-body {
+      padding: 24px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 650;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      font-size: 13px;
+      font-family: inherit;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(19, 122, 99, 0.1);
+    }
+
+    .modal-footer {
+      display: flex;
+      gap: 10px;
+      padding: 24px;
+      border-top: 1px solid var(--border);
+      justify-content: flex-end;
+    }
+
+    .btn {
+      padding: 10px 16px;
+      border-radius: 9px;
+      border: none;
+      font-size: 12px;
+      font-weight: 650;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+
+    .btn-primary {
+      background: var(--green);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--green-dark);
+    }
+
+    .btn-secondary {
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: #f0f2f0;
+    }
+
+    /* =========================================================
+       FILTERS
+    ========================================================= */
+
+    .filters-bar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .filter-btn {
+      padding: 8px 14px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: var(--surface);
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+
+    .filter-btn:hover {
+      background: var(--bg);
+    }
+
+    .filter-btn.active {
+      background: var(--green);
+      color: white;
+      border-color: var(--green);
+    }
+
+    .search-input {
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      font-size: 12px;
+      width: 200px;
+    }
+
+    /* =========================================================
+       MOBILE NAV
+    ========================================================= */
+
+    .mobile-nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .sidebar.mobile-open {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 999;
+      width: 100%;
+      border-radius: 0;
+    }
+
+    /* =========================================================
+       RESPONSIVE
+    ========================================================= */
+
+    @media (max-width: 1100px) {
+      .sidebar {
+        width: 210px;
+      }
+
+      .content {
+        padding: 22px;
+      }
+
+      .main-grid,
+      .widgets {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .main-grid .panel:last-child {
+        grid-column: span 2;
+      }
+    }
+
+    @media (max-width: 800px) {
+      .app {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        display: none;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .mobile-nav-toggle {
+        display: flex;
+      }
+
+      .sidebar.mobile-open {
+        display: flex;
+      }
+
+      .header {
+        padding: 16px 20px;
+        min-height: auto;
+        flex-wrap: wrap;
+      }
+
+      .header-left {
+        width: 100%;
+        margin-bottom: 12px;
+      }
+
+      .header-right {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .school-name {
+        display: none;
+      }
+
+      .content {
+        padding: 18px;
+      }
+
+      .kpis {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .pinned {
+        grid-template-columns: 1fr;
+      }
+
+      .main-grid,
+      .widgets {
+        grid-template-columns: 1fr;
+      }
+
+      .main-grid .panel:last-child {
+        grid-column: auto;
+      }
+
+      .search-input {
+        width: 100%;
+      }
+
+      .modal-content {
+        width: 95%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .header {
+        min-height: auto;
+      }
+
+      .greeting {
+        font-size: 21px;
+      }
+
+      .new-button {
+        padding: 8px 10px;
+        font-size: 11px;
+      }
+
+      .kpis {
+        grid-template-columns: 1fr;
+      }
+
+      .content {
+        padding: 14px;
+      }
+
+      .filter-btn {
+        padding: 6px 10px;
+        font-size: 11px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- =======================================================
+       SIDEBAR
+  ======================================================== -->
+
+  <aside class="sidebar">
+
+    <div class="brand">
+      <div class="brand-mark">R</div>
+      <div class="brand-name">
+        REPÈRE <span>ÉCOLE</span>
+      </div>
+    </div>
+
+    <div class="school-selector">
+      <strong>École Jean Moulin</strong>
+      École élémentaire
+    </div>
+
+    <div class="nav-section">
+
+      <div class="nav-label">Pilotage</div>
+
+      <nav class="nav">
+
+        <a href="#" class="nav-item active">
+          <span class="nav-icon">⌂</span>
+          <span>Tableau de bord</span>
+        </a>
+
+        <a href="#" class="nav-item">
+          <span class="nav-icon">▣</span>
+          <span>Agenda</span>
+        </a>
+
+        <a href="#" class="nav-item">
+          <span class="nav-icon">✓</span>
+          <span>Assiduité</span>
+        </a>
+
+        <a href="#" class="nav-item">
+          <span class="nav-icon">◎</span>
+          <span>Suivi des élèves</span>
+        </a>
+
+      </nav>
+    </div>
+
+    <div class="nav-section">
+
+      <div class="nav-label">Ressources</div>
+
+      <nav class="nav">
+
+        <a href="#" class="nav-item">
+          <span class="nav-icon">▤</span>
+          <span>Ressources</span>
+        </a>
+
+        <a href="#" class="nav-item">
+          <span class="nav-icon">♙</span>
+          <span>Contacts</span>
+        </a>
+
+        <a href="#" class="nav-item">
+          <span class="nav-icon">⚙</span>
+          <span>Paramètres</span>
+        </a>
+
+      </nav>
+    </div>
+
+    <div class="sidebar-bottom">
+
+      <div class="user">
+
+        <div class="avatar">ML</div>
+
+        <div class="user-info">
+          <strong>Josiane Mone</strong>
+          <span>Directrice</span>
+        </div>
+
+      </div>
+
+    </div>
+
+  </aside>
+
+
+  <!-- =======================================================
+       MAIN
+  ======================================================== -->
+
+  <main class="main">
+
+    <!-- HEADER -->
+
+    <header class="header">
+
+      <button class="mobile-nav-toggle" onclick="toggleMobileNav()">☰</button>
+
+      <div class="header-left">
+
+        <div class="date">
+          Lundi 6 octobre 2026
+        </div>
+
+        <div class="greeting">
+          Bonjour Josiane 👋
+        </div>
+
+        <div class="quote">
+          « Une école bien pilotée est une école qui peut se concentrer sur l'essentiel. »
+        </div>
+
+      </div>
+
+
+      <div class="header-right">
+
+        <div class="school-name">
+          <strong>École Jean Moulin</strong>
+          Marseille · 8 classes · 184 élèves
+        </div>
+
+        <button class="new-button" onclick="openNew()">
+          + Nouveau
+        </button>
+
+      </div>
+
+    </header>
+
+
+    <!-- CONTENT -->
+
+    <div class="content">
+
+
+      <!-- FILTERS -->
+
+      <div class="filters-bar">
+        <input
+          type="text"
+          id="searchInput"
+          class="search-input"
+          placeholder="Rechercher..."
+        >
+        <button class="filter-btn active" data-filter="priority" data-value="all">
+          Tous
+        </button>
+        <button class="filter-btn" data-filter="priority" data-value="urgent">
+          ⚠ Urgent
+        </button>
+        <button class="filter-btn" data-filter="priority" data-value="late">
+          ◷ En retard
+        </button>
+        <button class="filter-btn" data-filter="priority" data-value="done">
+          ✓ Fait
+        </button>
+      </div>
+
+      <!-- KPI -->
+
+      <section class="kpis">
+
+        <div class="kpi urgent">
+
+          <div class="kpi-top">
+            <span class="kpi-label">Urgent</span>
+            <span class="kpi-icon">⚠</span>
+          </div>
+
+          <div class="kpi-value">3</div>
+
+          <div class="kpi-info">
+            éléments nécessitent votre attention
+          </div>
+
+        </div>
+
+
+        <div class="kpi late">
+
+          <div class="kpi-top">
+            <span class="kpi-label">En retard</span>
+            <span class="kpi-icon">◷</span>
+          </div>
+
+          <div class="kpi-value">5</div>
+
+          <div class="kpi-info">
+            tâches à traiter
+          </div>
+
+        </div>
+
+
+        <div class="kpi today">
+
+          <div class="kpi-top">
+            <span class="kpi-label">Aujourd'hui</span>
+            <span class="kpi-icon">▣</span>
+          </div>
+
+          <div class="kpi-value">12</div>
+
+          <div class="kpi-info">
+            événements et échéances
+          </div>
+
+        </div>
+
+
+        <div class="kpi">
+
+          <div class="kpi-top">
+            <span class="kpi-label">Épinglés</span>
+            <span class="kpi-icon">📌</span>
+          </div>
+
+          <div class="kpi-value">4</div>
+
+          <div class="kpi-info">
+            éléments suivis
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ÉPINGLÉS -->
+
+      <div class="section-header">
+
+        <div class="section-title">
+          Épinglés
+        </div>
+
+        <a href="#" class="section-link">
+          Voir tout
+        </a>
+
+      </div>
+
+
+      <section class="pinned">
+
+        <div class="pinned-item">
+
+          <div class="pin-icon">!</div>
+
+          <div class="pinned-text">
+            <strong>Conseil d'école</strong>
+            <span>Jeudi 10 octobre · 18h00</span>
+          </div>
+
+        </div>
+
+
+        <div class="pinned-item">
+
+          <div class="pin-icon">▤</div>
+
+          <div class="pinned-text">
+            <strong>Budget fournitures</strong>
+            <span>À valider avant vendredi</span>
+          </div>
+
+        </div>
+
+
+        <div class="pinned-item">
+
+          <div class="pin-icon">◎</div>
+
+          <div class="pinned-text">
+            <strong>Suivi Lucas M.</strong>
+            <span>Point avec la famille</span>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- MAIN GRID -->
+
+      <section class="main-grid">
+
+
+        <!-- AUJOURD'HUI -->
+
+        <article class="panel">
+
+          <div class="panel-header">
+            <h3>Aujourd'hui</h3>
+            <span>6 octobre</span>
+          </div>
+
+          <div class="panel-body">
+
+            <div class="list-item">
+
+              <div class="item-icon blue">
+                ◷
+              </div>
+
+              <div class="item-content">
+                <strong>Réunion équipe pédagogique</strong>
+                <span>Salle des maîtres</span>
+              </div>
+
+              <div class="item-time">
+                09:00
+              </div>
+
+            </div>
+
+
+            <div class="list-item">
+
+              <div class="item-icon green">
+                ✓
+              </div>
+
+              <div class="item-content">
+                <strong>Visite de l'inspection</strong>
+                <span>Classe de CM2</span>
+              </div>
+
+              <div class="item-time">
+                10:30
+              </div>
+
+            </div>
+
+
+            <div class="list-item">
+
+              <div class="item-icon orange">
+                !
+              </div>
+
+              <div class="item-content">
+                <strong>Appel famille Dupont</strong>
+                <span>Suivi de l'absence</span>
+              </div>
+
+              <div class="item-time">
+                14:00
+              </div>
+
+            </div>
+
+
+            <div class="list-item">
+
+              <div class="item-icon blue">
+                ▣
+              </div>
+
+              <div class="item-content">
+                <strong>Conseil des maîtres</strong>
+                <span>Ordre du jour à préparer</span>
+              </div>
+
+              <div class="item-time">
+                16:30
+              </div>
+
+            </div>
+
+          </div>
+
+        </article>
+
+
+        <!-- À TRAITER -->
+
+        <article class="panel">
+
+          <div class="panel-header">
+            <h3>À traiter</h3>
+            <span class="badge red">3 urgents</span>
+          </div>
+
+          <div class="panel-body">
+
+
+            <div class="list-item" data-priority="urgent">
+
+              <div class="item-icon red">
+                !
+              </div>
+
+              <div class="item-content">
+                <strong>Absence non justifiée</strong>
+                <span>Lucas Martin · CM1</span>
+              </div>
+
+              <span class="badge red">
+                Urgent
+              </span>
+
+            </div>
+
+
+            <div class="list-item" data-priority="late">
+
+              <div class="item-icon orange">
+                ◷
+              </div>
+
+              <div class="item-content">
+                <strong>Validation commande</strong>
+                <span>Fournitures scolaires</span>
+              </div>
+
+              <span class="badge orange">
+                En retard
+              </span>
+
+            </div>
+
+
+            <div class="list-item" data-priority="late">
+
+              <div class="item-icon orange">
+                ✉
+              </div>
+
+              <div class="item-content">
+                <strong>Répondre au message</strong>
+                <span>Parent · Emma Bernard</span>
+              </div>
+
+            </div>
+
+
+            <div class="list-item" data-priority="done">
+
+              <div class="item-icon green">
+                ✓
+              </div>
+
+              <div class="item-content">
+                <strong>Compte rendu à valider</strong>
+                <span>Réunion du 2 octobre</span>
+              </div>
+
+            </div>
+
+
+          </div>
+
+        </article>
+
+
+        <!-- À VENIR -->
+
+        <article class="panel">
+
+          <div class="panel-header">
+            <h3>À venir</h3>
+            <span>7 prochains jours</span>
+          </div>
+
+          <div class="panel-body">
+
+
+            <div class="list-item">
+
+              <div class="item-icon blue">
+                ▣
+              </div>
+
+              <div class="item-content">
+                <strong>Conseil d'école</strong>
+                <span>Jeudi 10 octobre · 18:00</span>
+              </div>
+
+            </div>
+
+
+            <div class="list-item">
+
+              <div class="item-icon green">
+                ◎
+              </div>
+
+              <div class="item-content">
+                <strong>Sortie scolaire</strong>
+                <span>Vendredi 11 octobre</span>
+              </div>
+
+            </div>
+
+
+            <div class="list-item">
+
+              <div class="item-icon blue">
+                ◷
+              </div>
+
+              <div class="item-content">
+                <strong>Réunion parents</strong>
+                <span>Lundi 14 octobre · 17:30</span>
+              </div>
+
+            </div>
+
+
+            <div class="list-item">
+
+              <div class="item-icon orange">
+                !
+              </div>
+
+              <div class="item-content">
+                <strong>Évaluation sécurité</strong>
+                <span>Mardi 15 octobre</span>
+              </div>
+
+            </div>
+
+
+          </div>
+
+        </article>
+
+      </section>
+
+
+      <!-- WIDGETS -->
+
+      <section class="widgets">
+
+
+        <!-- ÉQUIPE -->
+
+        <article class="widget">
+
+          <div class="widget-title">
+            <strong>Équipe</strong>
+            <span>8 personnes</span>
+          </div>
+
+
+          <div class="team-row">
+
+            <div class="person">
+
+              <div class="person-avatar">
+                AL
+              </div>
+
+              <div class="person-info">
+                <strong>Anne Laurent</strong>
+                <span>CM2</span>
+              </div>
+
+            </div>
+
+            <div class="online"></div>
+
+          </div>
+
+
+          <div class="team-row">
+
+            <div class="person">
+
+              <div class="person-avatar">
+                JD
+              </div>
+
+              <div class="person-info">
+                <strong>Julien Durand</strong>
+                <span>CM1</span>
+              </div>
+
+            </div>
+
+            <div class="online"></div>
+
+          </div>
+
+
+          <div class="team-row">
+
+            <div class="person">
+
+              <div class="person-avatar">
+                SC
+              </div>
+
+              <div class="person-info">
+                <strong>Sophie Caron</strong>
+                <span>CE2</span>
+              </div>
+
+            </div>
+
+            <div class="online"></div>
+
+          </div>
+
+        </article>
+
+
+        <!-- ASSIDUITÉ -->
+
+        <article class="widget">
+
+          <div class="widget-title">
+            <strong>Assiduité</strong>
+            <span>Cette semaine</span>
+          </div>
+
+          <div class="attendance-number">
+            94%
+          </div>
+
+          <div class="attendance-label">
+            taux de présence
+          </div>
+
+          <div class="progress">
+            <div class="progress-bar"></div>
+          </div>
+
+          <div class="attendance-meta">
+            <span>173 présents</span>
+            <span>11 absents</span>
+          </div>
+
+        </article>
+
+
+        <!-- SUIVI ÉLÈVES -->
+
+        <article class="widget">
+
+          <div class="widget-title">
+            <strong>Suivi des élèves</strong>
+            <span>Voir le détail →</span>
+          </div>
+
+
+          <div class="followup-stat">
+
+            <div class="circle">
+              92%
+            </div>
+
+            <div class="followup-details">
+
+              <div>
+                <strong>169</strong>
+                <span>suivis à jour</span>
+              </div>
+
+              <div>
+                <strong>9</strong>
+                <span>à surveiller</span>
+              </div>
+
+              <div>
+                <strong>6</strong>
+                <span>points en attente</span>
+              </div>
+
+            </div>
+
+          </div>
+
+        </article>
+
+
+      </section>
+
+    </div>
+
+  </main>
+
+</div>
+
+
+<!-- MODALS -->
+
+<!-- NEW ITEM MODAL -->
+
+<div id="newItemModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Créer un nouvel élément</h2>
+      <button class="modal-close">✕</button>
+    </div>
+    <div class="modal-body">
+      <form id="newItemForm">
+        <div class="form-group">
+          <label for="itemType">Type</label>
+          <select id="itemType" required>
+            <option value="">Sélectionner un type</option>
+            <option value="tâche">Tâche</option>
+            <option value="événement">Événement</option>
+            <option value="élève">Élève</option>
+            <option value="absence">Absence</option>
+            <option value="note">Note</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="itemTitle">Titre</label>
+          <input type="text" id="itemTitle" required placeholder="Ex: Réunion parents">
+        </div>
+
+        <div class="form-group">
+          <label for="itemDescription">Description</label>
+          <textarea id="itemDescription" placeholder="Détails supplémentaires..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="itemDate">Date</label>
+          <input type="date" id="itemDate">
+        </div>
+
+        <div class="form-group">
+          <label for="itemPriority">Priorité</label>
+          <select id="itemPriority">
+            <option value="normal">Normal</option>
+            <option value="urgent">Urgent</option>
+            <option value="late">En retard</option>
+          </select>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeAllModals()">Annuler</button>
+      <button class="btn btn-primary" onclick="submitNewItem()">Créer</button>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL MODAL -->
+
+<div id="detailModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Détails</h2>
+      <button class="modal-close">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Titre</label>
+        <input type="text" readonly value="Absence non justifiée">
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea readonly>Lucas Martin · CM1</textarea>
+      </div>
+      <div class="form-group">
+        <label>Priorité</label>
+        <input type="text" readonly value="Urgent" style="color: var(--red);">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeAllModals()">Fermer</button>
+      <button class="btn btn-primary">Modifier</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ================================================================
+  // DATA
+  // ================================================================
+
+  const mockData = {
+    tasks: [
+      { id: 1, title: "Absence non justifiée", description: "Lucas Martin · CM1", priority: "urgent", date: "2026-10-06" },
+      { id: 2, title: "Validation commande", description: "Fournitures scolaires", priority: "late", date: "2026-10-07" },
+      { id: 3, title: "Répondre au message", description: "Parent · Emma Bernard", priority: "late", date: "2026-10-08" },
+      { id: 4, title: "Compte rendu à valider", description: "Réunion du 2 octobre", priority: "done", date: "2026-10-02" },
+    ],
+    events: [
+      { id: 1, title: "Réunion équipe pédagogique", place: "Salle des maîtres", time: "09:00", date: "2026-10-06" },
+      { id: 2, title: "Visite de l'inspection", place: "Classe de CM2", time: "10:30", date: "2026-10-06" },
+      { id: 3, title: "Appel famille Dupont", place: "Bureau", time: "14:00", date: "2026-10-06" },
+      { id: 4, title: "Conseil des maîtres", place: "Salle des maîtres", time: "16:30", date: "2026-10-06" },
+    ],
+    students: [
+      { id: 1, name: "Anne Laurent", class: "CM2", status: "online" },
+      { id: 2, name: "Julien Durand", class: "CM1", status: "online" },
+      { id: 3, name: "Sophie Caron", class: "CE2", status: "online" },
+    ]
+  };
+
+  // ================================================================
+  // MODAL UTILS
+  // ================================================================
+
+  function openModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) modal.classList.add("active");
+  }
+
+  function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) modal.classList.remove("active");
+  }
+
+  function closeAllModals() {
+    document.querySelectorAll(".modal").forEach(m => m.classList.remove("active"));
+  }
+
+  // ================================================================
+  // NEW ITEM MODAL
+  // ================================================================
+
+  function openNew() {
+    openModal("newItemModal");
+  }
+
+  function submitNewItem() {
+    const type = document.getElementById("itemType").value;
+    const title = document.getElementById("itemTitle").value;
+
+    if (!type || !title.trim()) {
+      alert("Veuillez remplir tous les champs");
+      return;
+    }
+
+    alert(`✓ Nouvel ${type} créé: ${title}`);
+    closeAllModals();
+    document.getElementById("newItemForm").reset();
+  }
+
+  // ================================================================
+  // FILTERS
+  // ================================================================
+
+  let activeFilters = {
+    priority: "all",
+    search: ""
+  };
+
+  function setFilter(filterType, value) {
+    activeFilters[filterType] = value;
+    applyFilters();
+  }
+
+  function applyFilters() {
+    const priority = activeFilters.priority;
+    const search = activeFilters.search.toLowerCase();
+
+    document.querySelectorAll(".list-item").forEach(item => {
+      let show = true;
+
+      if (priority !== "all") {
+        const itemPriority = item.dataset.priority;
+        show = show && itemPriority === priority;
+      }
+
+      if (search && show) {
+        const text = item.textContent.toLowerCase();
+        show = text.includes(search);
+      }
+
+      item.style.display = show ? "" : "none";
+    });
+  }
+
+  // ================================================================
+  // MOBILE NAV
+  // ================================================================
+
+  function toggleMobileNav() {
+    const sidebar = document.querySelector(".sidebar");
+    sidebar.classList.toggle("mobile-open");
+  }
+
+  function closeMobileNav() {
+    const sidebar = document.querySelector(".sidebar");
+    sidebar.classList.remove("mobile-open");
+  }
+
+  // ================================================================
+  // EVENT LISTENERS - INIT
+  // ================================================================
+
+  document.addEventListener("DOMContentLoaded", function() {
+    // Navigation
+    document.querySelectorAll(".nav-item").forEach(item => {
+      item.addEventListener("click", function(event) {
+        event.preventDefault();
+        closeMobileNav();
+        document.querySelectorAll(".nav-item").forEach(nav => nav.classList.remove("active"));
+        this.classList.add("active");
+      });
+    });
+
+    // Mobile nav toggle
+    const mobileToggle = document.querySelector(".mobile-nav-toggle");
+    if (mobileToggle) {
+      mobileToggle.addEventListener("click", toggleMobileNav);
+    }
+
+    // Close mobile nav on content click
+    document.querySelector(".main")?.addEventListener("click", closeMobileNav);
+
+    // Modal close buttons
+    document.querySelectorAll(".modal-close").forEach(btn => {
+      btn.addEventListener("click", function() {
+        closeAllModals();
+      });
+    });
+
+    // Close modal on background click
+    document.querySelectorAll(".modal").forEach(modal => {
+      modal.addEventListener("click", function(e) {
+        if (e.target === this) closeAllModals();
+      });
+    });
+
+    // Form submissions
+    document.getElementById("newItemForm")?.addEventListener("submit", function(e) {
+      e.preventDefault();
+      submitNewItem();
+    });
+
+    // Filters
+    document.querySelectorAll(".filter-btn").forEach(btn => {
+      btn.addEventListener("click", function() {
+        const filterType = this.dataset.filter;
+        if (filterType === "priority") {
+          document.querySelectorAll(".filter-btn[data-filter='priority']").forEach(b => b.classList.remove("active"));
+          this.classList.add("active");
+        }
+        setFilter(filterType, this.dataset.value);
+      });
+    });
+
+    document.getElementById("searchInput")?.addEventListener("input", function(e) {
+      setFilter("search", e.target.value);
+    });
+
+    // List item interactions
+    document.querySelectorAll(".list-item").forEach(item => {
+      item.addEventListener("click", function() {
+        const title = this.querySelector(".item-content strong")?.textContent;
+        if (title) openModal("detailModal");
+      });
+      item.style.cursor = "pointer";
+    });
+  });
+</script>
+
+</body>
+</html>
+```
